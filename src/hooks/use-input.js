@@ -1,27 +1,43 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
+
+const initialState = { inputValue: "", isTouched: false };
+
+const inputStateReducer = (state, action) => {
+  if (action.type === "INPUT")
+    return { inputValue: action.inputValue, isTouched: state.isTouched };
+  if (action.type === "BLUR")
+    return { inputValue: state.inputValue, isTouched: true };
+  if (action.type === "INPUT") return { inputValue: "", isTouched: false };
+  return initialState;
+};
 
 const useInput = (validate) => {
-  const [inputValue, setInputValue] = useState("");
-  const [isTouched, setIsTouched] = useState(false);
+  const [inputState, dispatch] = useReducer(inputStateReducer, initialState);
 
-  const inputIsValid = validate(inputValue);
-  const hasError = !inputIsValid && isTouched;
+  //   const [inputValue, setInputValue] = useState("");
+  //   const [isTouched, setIsTouched] = useState(false);
+
+  const inputIsValid = validate(inputState.inputValue);
+  const hasError = !inputIsValid && inputState.isTouched;
 
   const inputChangeHandler = (event) => {
-    setInputValue(event.target.value);
+    dispatch({ type: "INPUT", inputValue: event.target.value });
+    // setInputValue(event.target.value);
   };
 
   const inputBlurHandler = () => {
-    setIsTouched(true);
+    dispatch({ type: "BLUR" });
+    // setIsTouched(true);
   };
 
   const reset = () => {
-    setInputValue("");
-    setIsTouched(false);
+    dispatch({ type: "RESET" });
+    // setInputValue("");
+    // setIsTouched(false);
   };
 
   return {
-    value: inputValue,
+    value: inputState.inputValue,
     inputIsValid,
     hasError,
     inputChangeHandler,
