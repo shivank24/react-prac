@@ -1,45 +1,65 @@
 import { useState } from "react";
+import useInput from "../hooks/use-input";
 
 const SimpleInput = (props) => {
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+  const {
+    value: enteredName,
+    inputIsValid: enteredNameIsValid,
+    hasError: nameInputIsInvalid,
+    inputChangeHandler: nameInputChangeHandler,
+    inputBlurHandler: nameInputBlurHandler,
+    reset: resetNameInput,
+  } = useInput((value) => value.trim() !== "");
 
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
-
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
-
-  const validRegex =
+  const validEmailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  const enteredEmailIsValid = enteredEmail.match(validRegex);
-  const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
+
+  const {
+    value: enteredEmail,
+    inputIsValid: enteredEmailIsValid,
+    hasError: emailInputIsInvalid,
+    inputChangeHandler: emailInputChangeHandler,
+    inputBlurHandler: emailInputBlurHandler,
+    reset: resetEmailInput,
+  } = useInput((value) => value.match(validEmailRegex));
+
+  // const [enteredName, setEnteredName] = useState("");
+  // const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+
+  // const [enteredEmail, setEnteredEmail] = useState("");
+  // const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
+
+  // const enteredNameIsValid = enteredName.trim() !== "";
+  // const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+
+  // const enteredEmailIsValid = enteredEmail.match(validRegex);
+  // const emailInputIsInvalid = !enteredEmailIsValid && enteredEmailTouched;
 
   let formIsValid = false;
 
   if (enteredNameIsValid && enteredEmailIsValid) formIsValid = true;
 
-  const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-  };
+  // const nameInputChangeHandler = (event) => {
+  //   setEnteredName(event.target.value);
+  // };
 
-  const nameInputBlurHandler = () => {
-    setEnteredNameTouched(true);
-  };
+  // const nameInputBlurHandler = () => {
+  //   setEnteredNameTouched(true);
+  // };
 
-  const emailInputChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
-  };
+  // const emailInputChangeHandler = (event) => {
+  //   setEnteredEmail(event.target.value);
+  // };
 
-  const emailInputBlurHandler = () => {
-    setEnteredEmailTouched(true);
-  };
+  // const emailInputBlurHandler = () => {
+  //   setEnteredEmailTouched(true);
+  // };
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
 
-    setEnteredNameTouched(true);
-    setEnteredEmailTouched(true);
+    // setEnteredNameTouched(true);
+    // setEnteredEmailTouched(true);
 
     if (!enteredNameIsValid || !enteredEmailIsValid) {
       return;
@@ -47,10 +67,11 @@ const SimpleInput = (props) => {
 
     console.log(enteredName);
     console.log(enteredEmail);
-    setEnteredName("");
-    setEnteredEmail("");
-    setEnteredNameTouched(false);
-    setEnteredEmailTouched(false);
+
+    resetNameInput();
+    resetEmailInput();
+    // setEnteredEmail("");
+    // setEnteredEmailTouched(false);
   };
 
   const nameInputClasses = nameInputIsInvalid
